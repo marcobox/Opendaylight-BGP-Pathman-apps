@@ -51,13 +51,13 @@ from string import Template
 #==============================================================
 version = '5.0'
 # Defaults overridden by pathman_ini.py
-odl_ip = '127.0.0.1'
-odl_port = '8181'
+odl_ip = '192.168.50.220'
+dl_port = '8181'
 log_file = 'pathman.log'
 log_size = 100000
 log_count = 3
-log_level = 'INFO'
-#log_level = 'DEBUG'
+#log_level = 'INFO'
+log_level = 'DEBUG'
 
 from pathman_ini import *
 
@@ -216,8 +216,8 @@ LOGGING = {
         },
     'root': {
         'level': log_level,
-        #'handlers': ['console','logtofile']
-        'handlers': ['logtofile']
+        'handlers': ['console','logtofile']
+        #'handlers': ['logtofile']
         },
 }
 

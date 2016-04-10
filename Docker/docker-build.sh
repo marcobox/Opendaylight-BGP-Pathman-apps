@@ -1,3 +1,3 @@
 #! /bin/bash
-docker build -t bgp-pathman .
+docker build -t marcobox:pathman .
 

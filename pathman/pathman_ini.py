@@ -23,7 +23,7 @@
 log_file = 'pathman.log'
 log_size = 100000
 log_count = 3
-odl_ip = '198.18.1.80'
+odl_ip = '192.168.50.220'
 odl_port = '8181'
 odl_user = 'admin'
 odl_password = 'admin'

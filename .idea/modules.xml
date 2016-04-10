@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Opendaylight-BGP-Pathman-apps.iml" filepath="$PROJECT_DIR$/.idea/Opendaylight-BGP-Pathman-apps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SDNControllerExamples/.idea/SDNControllerExamples.iml" filepath="$PROJECT_DIR$/../SDNControllerExamples/.idea/SDNControllerExamples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../opendaylight-sample-apps/.idea/opendaylight-sample-apps.iml" filepath="$PROJECT_DIR$/../opendaylight-sample-apps/.idea/opendaylight-sample-apps.iml" />
+    </modules>
+  </component>
+</project>

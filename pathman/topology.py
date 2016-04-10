@@ -13,7 +13,9 @@ import logging
 class dataHandler(tornado.web.RequestHandler):
     def get(self):
         service = topologyservice()
-        o_data = service.loadData("http://198.18.1.80:8181/restconf/operational/network-topology:network-topology/topology/example-linkstate-topology")
+        o_data = service.loadData(
+            "http://192.168.50.220:8181/restconf/operational/network-topology"
+            ":network-topology/topology/example-linkstate-topology")
         try:
             nodes = service.parseNodes(o_data)
             links1 = service.parseLinks(o_data)
