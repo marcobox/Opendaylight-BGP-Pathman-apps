@@ -60,7 +60,7 @@ log_count = 3
 log_level = 'DEBUG'
 
 from pathman_ini import *
-
+import netaddr
 #==============================================================
 Node = namedtuple('Node', ['name', 'id', 'loopback', 'portlist','pcc','pcep_type','prefix'])
 LSP = namedtuple('LSP',['name', 'pcc', 'hoplist', 'iphoplist'])
@@ -380,6 +380,8 @@ def node_structure(my_topology, debug = 2):
                 success, hname = name_check(nodes['l3-unicast-igp-topology:igp-node-attributes']['router-id'][0])
                 if success:
                     name = hname
+        if name.isdigit():
+            name = str(netaddr.IPAddress(int(name)))
         node = Node(name,node_dict['router'],router_id,node_ports,pcc, pcep_type, prefix_array)
         logging.info("New node: %s" % str(node))
         node_list.append(node)

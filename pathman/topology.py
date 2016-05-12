@@ -22,9 +22,9 @@ class dataHandler(tornado.web.RequestHandler):
             links = service.dupLink(links1)
             result = {}
             result["nodes"] = nodes
-	    logging.info('BGP Nodes: %s' % len(nodes))
+            logging.info('BGP Nodes: %s' % len(nodes))
             result['links'] = links
-	    logging.info('BGP Links: %s' % len(links))
+            logging.info('BGP Links: %s' % len(links))
             self.write(json.dumps(result))
             self.set_header("content-type","application/json")
         except Exception as ex:
@@ -35,7 +35,7 @@ class topologyservice(object):
         logging.info("BGP init")
 
     def loadData(self,url):
-	return get_url(url)
+        return get_url(url)
 
     def parseNodes(self, my_topology):
         logging.info("BGP build node topology")
