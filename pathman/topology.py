@@ -2,8 +2,7 @@
     parseNodes Updated 20150726 by Niklas for OSPF support and ISIS/OSPF broadcast network/pseudo node support
     changed prints to logging, Niklas 20151005
     """
-import urllib2
-import requests
+
 import tornado.web
 import json
 from pathman50 import html_style, name_check, get_url
@@ -14,8 +13,9 @@ class dataHandler(tornado.web.RequestHandler):
     def get(self):
         service = topologyservice()
         o_data = service.loadData(
-            "http://192.168.50.220:8181/restconf/operational/network-topology"
-            ":network-topology/topology/example-linkstate-topology")
+            "http://%s:%s/restconf/operational/network-topology"
+            ":network-topology/topology/example-linkstate-topology-%s" % (
+                odl_ip, odl_port,odl_client_num))
         try:
             nodes = service.parseNodes(o_data)
             links1 = service.parseLinks(o_data)

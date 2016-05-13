@@ -51,9 +51,7 @@ from string import Template
 #==============================================================
 version = '5.0'
 # Defaults overridden by pathman_ini.py
-odl_ip = '192.168.50.220'
-dl_port = '8181'
-log_file = 'pathman.log'
+
 log_size = 100000
 log_count = 3
 #log_level = 'INFO'
@@ -65,8 +63,6 @@ import netaddr
 Node = namedtuple('Node', ['name', 'id', 'loopback', 'portlist','pcc','pcep_type','prefix'])
 LSP = namedtuple('LSP',['name', 'pcc', 'hoplist', 'iphoplist'])
 
-get_topo = 'http://%s:%s/restconf/operational/network-topology:network-topology/topology/example-linkstate-topology' %(odl_ip, odl_port)
-get_pcep = 'http://%s:%s/restconf/operational/network-topology:network-topology/topology/pcep-topology' %(odl_ip, odl_port)
 create_lsp = 'http://%s:%s/restconf/operations/network-topology-pcep:add-lsp' %(odl_ip, odl_port)
 update_lsp = 'http://%s:%s/restconf/operations/network-topology-pcep:update-lsp' %(odl_ip, odl_port)
 delete_lsp = 'http://%s:%s/restconf/operations/network-topology-pcep:remove-lsp' %(odl_ip, odl_port)
@@ -95,13 +91,17 @@ lsp07_xml = '''<input xmlns="urn:opendaylight:params:xml:ns:yang:topology:pcep">
     </endpoints-obj>
     <ero>{ero}</ero>
     </arguments>
-    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network-topology">/topo:network-topology/topo:topology[topo:topology-id="pcep-topology"]</network-topology-ref>
+    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network
+    -topology">/topo:network-topology/topo:topology[
+    topo:topology-id="pcep-topology-1"]</network-topology-ref>
     </input>'''
 
 lspDelete_xml = '''<input xmlns="urn:opendaylight:params:xml:ns:yang:topology:pcep">
      <node>{pcc}</node>
      <name>{name}</name>
-     <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network-topology">/topo:network-topology/topo:topology[topo:topology-id="pcep-topology"]</network-topology-ref>
+     <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network
+     -topology-1">/topo:network-topology/topo:topology[
+     topo:topology-id="pcep-topology"]</network-topology-ref>
     </input>'''
 
 
@@ -121,7 +121,9 @@ lsp07_xml_helium = '''<input>
     </endpoints-obj>
     <ero>{ero}</ero>
     </arguments>
-    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network-topology">/topo:network-topology/topo:topology[topo:topology-id="pcep-topology"]</network-topology-ref>
+    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network
+    -topology">/topo:network-topology/topo:topology[
+    topo:topology-id="pcep-topology-1"]</network-topology-ref>
     </input>'''
 
 lsp07update_xml = '''<input>
@@ -134,7 +136,9 @@ lsp07update_xml = '''<input>
     </lsp>
     <ero>{ero}</ero>
     </arguments>
-    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network-topology">/topo:network-topology/topo:topology[topo:topology-id="pcep-topology"]</network-topology-ref>
+    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network
+    -topology">/topo:network-topology/topo:topology[
+    topo:topology-id="pcep-topology-1"]</network-topology-ref>
     </input>'''
 
 ero_xml = '''<subobject>
@@ -763,6 +767,8 @@ def postUrl(url, data):
 def postXml(url, data):
     """ post our lsp creation commands """
     import requests
+    logging.info("Resuest: '%s'", url)
+    logging.info("Resuest: '\n%s'", data)
     response = requests.post(url, data=data, auth = (odl_user, odl_password),headers= {'Content-Type': 'application/xml'})
     print response.text
     #f = urllib2.urlopen(req)

@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="opendaylight-sample-apps" />
     <orderEntry type="module" module-name="SDNControllerExamples" />
+    <orderEntry type="module" module-name="opendaylight-sample-apps" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />
