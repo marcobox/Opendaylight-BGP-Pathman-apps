@@ -66,6 +66,10 @@ LSP = namedtuple('LSP',['name', 'pcc', 'hoplist', 'iphoplist'])
 create_lsp = 'http://%s:%s/restconf/operations/network-topology-pcep:add-lsp' %(odl_ip, odl_port)
 update_lsp = 'http://%s:%s/restconf/operations/network-topology-pcep:update-lsp' %(odl_ip, odl_port)
 delete_lsp = 'http://%s:%s/restconf/operations/network-topology-pcep:remove-lsp' %(odl_ip, odl_port)
+get_topo = 'http://%s:%s/restconf/operational/network-topology:network' \
+           '-topology/topology/%s' % (odl_ip, odl_port, bgp_topo_id)
+get_pcep = 'http://%s:%s/restconf/operational/network-topology:network' \
+           '-topology/topology/%s' % (odl_ip, odl_port, pcep_topo_id)
 curl_cmd = 'curl -X POST -H Content-Type:application/json  -d '
 
 
@@ -91,17 +95,13 @@ lsp07_xml = '''<input xmlns="urn:opendaylight:params:xml:ns:yang:topology:pcep">
     </endpoints-obj>
     <ero>{ero}</ero>
     </arguments>
-    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network
-    -topology">/topo:network-topology/topo:topology[
-    topo:topology-id="pcep-topology-1"]</network-topology-ref>
+    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network-topology">/topo:network-topology/topo:topology[topo:topology-id="{pcep_topo_id}"]</network-topology-ref>
     </input>'''
 
 lspDelete_xml = '''<input xmlns="urn:opendaylight:params:xml:ns:yang:topology:pcep">
      <node>{pcc}</node>
      <name>{name}</name>
-     <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network
-     -topology-1">/topo:network-topology/topo:topology[
-     topo:topology-id="pcep-topology"]</network-topology-ref>
+     <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network-topology">/topo:network-topology/topo:topology[topo:topology-id="{pcep_topo_id}"]</network-topology-ref>
     </input>'''
 
 
@@ -121,9 +121,7 @@ lsp07_xml_helium = '''<input>
     </endpoints-obj>
     <ero>{ero}</ero>
     </arguments>
-    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network
-    -topology">/topo:network-topology/topo:topology[
-    topo:topology-id="pcep-topology-1"]</network-topology-ref>
+    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network-topology">/topo:network-topology/topo:topology[topo:topology-id="{pcep_topo_id}"]</network-topology-ref>
     </input>'''
 
 lsp07update_xml = '''<input>
@@ -136,9 +134,7 @@ lsp07update_xml = '''<input>
     </lsp>
     <ero>{ero}</ero>
     </arguments>
-    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network
-    -topology">/topo:network-topology/topo:topology[
-    topo:topology-id="pcep-topology-1"]</network-topology-ref>
+    <network-topology-ref xmlns:topo="urn:TBD:params:xml:ns:yang:network-topology">/topo:network-topology/topo:topology[topo:topology-id="{pcep_topo_id}"]</network-topology-ref>
     </input>'''
 
 ero_xml = '''<subobject>
@@ -642,7 +638,7 @@ def lsp_create_json(src, dst, name_of_lsp , pcc, debug):
     lsp_dict.update({"input":{}})
     lsp_dict["input"].update({"node":pcc,
                              "name": name_of_lsp,
-                             "network-topology-ref":'/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\"pcep-topology\"]',
+                             "network-topology-ref":'/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\"%s\"]' % (pcep_topo_id),
                              "arguments":{}
                               })
     lsp_dict["input"]["arguments"] = {"endpoints-obj":{"ipv4":{"source-ipv4-address":src, "destination-ipv4-address": dst}}}
@@ -659,7 +655,12 @@ def lsp_create_xml_07(src, dst, name_of_lsp , pcc, hoplist, debug):
 
 
     ero = "".join(hop_xml_list)
-    new_lsp = {"pcc":pcc,"name":name_of_lsp,"src":src,"dst":dst,"ero":ero}
+    new_lsp = {"pcc":pcc,
+               "name":name_of_lsp,
+               "src":src,
+               "dst":dst,
+               "ero":ero,
+               "pcep_topo_id": pcep_topo_id}
     new_lsp_xml07 = lsp07_xml.format(**new_lsp)
     return new_lsp_xml07
 
@@ -674,7 +675,12 @@ def lsp_update_xml_07(src, dst, name_of_lsp , pcc, hoplist, debug):
 
 
     ero = "".join(hop_xml_list)
-    new_lsp = {"pcc":pcc,"name":name_of_lsp,"src":src,"dst":dst,"ero":ero}
+    new_lsp = {"pcc":pcc,
+               "name":name_of_lsp,
+               "src":src,
+               "dst":dst,
+               "ero":ero,
+               "pcep_topo_id":pcep_topo_id}
     lsp_update_xml07 = lsp07update_xml.format(**new_lsp)
     return lsp_update_xml07
 
@@ -685,12 +691,14 @@ def lsp_delete_json(name_of_lsp, pcc, debug):
     lsp_dict.update({"input":{}})
     lsp_dict["input"].update({"node":pcc,
                              "name": name_of_lsp,
-                             "network-topology-ref":'/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\"pcep-topology\"]'
+                             "network-topology-ref":'/network-topology:network-topology/network-topology:topology[network-topology:topology-id=\"%s\"]' % (pcep_topo_id)
                               })
     return lsp_dict
 def lsp_delete_xml(name_of_lsp, pcc, debug):
     """ build a json strtucture for lsp delete """
-    my_lsp = {'name':name_of_lsp, 'pcc':pcc}
+    my_lsp = {'name':name_of_lsp,
+              'pcc':pcc,
+              "pcep_topo_id": pcep_topo_id}
     data = lspDelete_xml.format(**my_lsp)
     return data
 

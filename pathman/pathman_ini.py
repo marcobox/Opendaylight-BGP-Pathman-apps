@@ -29,7 +29,5 @@ odl_password = 'admin'
 log_file = '/tmp/pathman.log'
 odl_client_num = 1
 odl_ip = '192.168.50.22%s' % str(odl_client_num - 1)
-get_topo = 'http://%s:%s/restconf/operational/network-topology:network' \
-           '-topology/topology/example-linkstate-topology-%s' % (odl_ip, odl_port, odl_client_num)
-get_pcep = 'http://%s:%s/restconf/operational/network-topology:network' \
-           '-topology/topology/pcep-topology-%s' %(odl_ip, odl_port, odl_client_num)
+bgp_topo_id= 'example-linkstate-topology-%s' % (odl_client_num)
+pcep_topo_id = 'pcep-topology-%s' % (odl_client_num)
